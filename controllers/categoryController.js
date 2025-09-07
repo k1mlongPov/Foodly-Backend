@@ -15,11 +15,22 @@ module.exports = {
 
         try {
             const categories = await Category.find({ title: { $ne: "More" } }, { __v: 0 });
-            res.status(200).json({ categories });
+            res.status(200).json(categories);
         } catch (error) {
             res.status(500).json({ status: false, message: error.message });
         }
     },
+    /*
+    getRandomCategories: async (req, res) => {
+        try {
+            const categories = await Category.find().limit(5);
+            res.status(200).json(categories);
+        } catch (error) {
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+        */
+
 
     getRandomCategories: async (req, res) => {
         try {
@@ -28,7 +39,7 @@ module.exports = {
                 { $sample: { size: 4 } }
             ]);
 
-            const moreCategory = await Category.findOne({ value: "more" }, { __v: 0 });
+            const moreCategory = await Category.findOne({ value: "more" });
 
             if (moreCategory) {
                 categories.push(moreCategory);
@@ -38,4 +49,5 @@ module.exports = {
             res.status(500).json({ status: false, message: error.message });
         }
     }
+
 };  

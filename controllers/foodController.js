@@ -39,13 +39,13 @@ module.exports = {
             if (req.params.code) {
                 randomFoodList = await Food.aggregate([
                     { $match: { code: req.params.code } },
-                    { $sample: { size: 5 } },
+                    { $sample: { size: 3 } },
                     { $project: { __v: 0 } },
                 ]);
             }
             if (!randomFoodList.length) {
                 randomFoodList = await Food.aggregate([
-                    { $sample: { size: 5 } },
+                    { $sample: { size: 3 } },
                     { $project: { __v: 0 } },
                 ]);
             }
@@ -61,6 +61,14 @@ module.exports = {
         }
     },
 
+    getAllFoodsByCode: async (req, res) => {
+        try {
+            const foods = await Food.find({ code: req.params.code });
+            res.status(200).json(foods);
+        } catch (error) {
+            res.status(500).json({ status: false, message: error.message });
+        }
+    },
 
     //Restaurant Menu
     getFoodsByRestaurant: async (req, res) => {
